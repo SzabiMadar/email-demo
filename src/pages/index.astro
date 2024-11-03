@@ -1,0 +1,215 @@
+---
+import ContactForm from "../components/ContactForm.astro";
+---
+
+<!-- <div class="contact-container">
+  <div class="contact-content">
+    <h1>Contact Us</h1>
+    <p class="subtitle">
+      We are available for questions, feedback, or collaboration opportunities.
+      Let us know how we can help!
+    </p>
+
+    <div class="contact-grid">
+      <div class="contact-details">
+        <h2>Contact Details</h2>
+        <ul>
+          <li><strong>Phone:</strong> (123) 34567890</li>
+          <li>
+            <strong>Email:</strong>
+            <a href="mailto:your-email@example.com">your-email@example.com</a>
+          </li>
+        </ul>
+      </div>
+
+      <section>
+        <form id="contact-form">
+          <label for="name">Név:</label>
+          <input type="text" id="name" name="name" required />
+
+          <label for="from">E-mail Cím:</label>
+          <input type="email" id="from" name="from" required />
+
+          <label for="subject">Subject:</label>
+          <input type="text" id="subject" name="subject" required />
+
+          <label for="message">Message:</label>
+          <textarea id="message" name="message" required></textarea>
+
+          <button type="submit">Send</button>
+        </form>
+
+        <p id="response-message"></p>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+  document
+    .getElementById("contact-form")
+    ?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const from = (document.getElementById("from") as HTMLInputElement)?.value;
+      const name = (document.getElementById("name") as HTMLInputElement)?.value;
+      const to = "szabolcs.madar@gmail.com";
+      const subject = (document.getElementById("subject") as HTMLInputElement)
+        ?.value;
+      const message = (
+        document.getElementById("message") as HTMLTextAreaElement
+      )?.value;
+      const html = `<p><strong>From:</strong> ${from}</p><p><strong>Subject:</strong> ${subject}</p><p><strong>Message:</strong> ${message}</p>`;
+
+      console.log(from, name, to, subject, message, html);
+      try {
+        const response = await fetch("/api/sendemail.json", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: `${name} <send@molnaresmark.hu>`,
+            subject,
+            html,
+            to,
+            text: message,
+          }),
+        });
+
+        console.log(from, subject, message, html, to);
+
+        const result = await response.json();
+
+        if (response.ok) {
+          document.getElementById("response-message")!.textContent =
+            result.message;
+          (document.getElementById("contact-form") as HTMLFormElement)?.reset();
+        } else {
+          document.getElementById("response-message")!.textContent =
+            result.error || "Failed to send message.";
+        }
+      } catch (error) {
+        document.getElementById("response-message")!.textContent =
+          "An error occurred. Please try again later.";
+      }
+    });
+</script>
+
+<style>
+  .contact-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family:
+      system-ui,
+      -apple-system,
+      sans-serif;
+  }
+
+  .contact-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  h1 {
+    font-size: 3rem;
+    margin: 0;
+    font-weight: bold;
+  }
+
+  .subtitle {
+    color: #666;
+    font-size: 1.1rem;
+    margin: 0;
+    max-width: 600px;
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    margin-top: 2rem;
+  }
+
+  .contact-details h2 {
+    font-size: 1.5rem;
+    margin: 0 0 1.5rem 0;
+  }
+
+  .contact-details ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .contact-details li {
+    margin-bottom: 1rem;
+  }
+
+  .contact-details a {
+    color: #000;
+    text-decoration: underline;
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  label {
+    font-weight: 500;
+  }
+
+  input,
+  textarea {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 100%;
+  }
+
+  textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  button {
+    background: #000;
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  button:hover {
+    background: #333;
+  }
+
+  @media (max-width: 768px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+    }
+  }
+</style>
+ -->
+<section>
+  <ContactForm />
+</section>

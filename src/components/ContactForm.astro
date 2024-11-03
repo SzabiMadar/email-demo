@@ -1,0 +1,165 @@
+---
+
+---
+
+<div class="contact-form">
+  <h2>Kapcsolat</h2>
+  <form id="contactForm" class="form">
+    <div class="form-group">
+      <label for="name">Teljes Név *</label>
+      <input type="text" id="name" name="name" required />
+    </div>
+
+    <div class="form-group">
+      <label for="email">E-mail cím *</label>
+      <input type="email" id="email" name="email" required />
+    </div>
+
+    <div class="form-group">
+      <label for="subject">Tárgy *</label>
+      <input type="text" id="subject" name="subject" required />
+    </div>
+
+    <div class="form-group">
+      <label for="message">Üzenet *</label>
+      <textarea id="message" name="message" rows="5" required></textarea>
+    </div>
+
+    <button type="submit" id="submitBtn">Küldés</button>
+    <p id="formStatus" class="status-message"></p>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById("contactForm") as HTMLFormElement;
+  const submitBtn = document.getElementById("submitBtn") as HTMLButtonElement;
+  const formStatus = document.getElementById("formStatus");
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    if (!form || !submitBtn || !formStatus) return;
+
+    try {
+      submitBtn.disabled = true;
+      formStatus.textContent = "Üzenet küldése folyamatban...";
+      formStatus.className = "status-message info";
+
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      const response = await fetch("/api/sendEmail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          result.error || "Hiba történt az üzenet küldése közben."
+        );
+      }
+
+      form.reset();
+      formStatus.textContent = "Az üzenet sikeresen elküldve!";
+      formStatus.className = "status-message success";
+    } catch (error) {
+      formStatus.textContent =
+        error instanceof Error
+          ? error.message
+          : "Hiba történt az üzenet küldése közben.";
+      formStatus.className = "status-message error";
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+</script>
+
+<style>
+  .contact-form {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  h2 {
+    color: #333;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #555;
+    font-weight: 500;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+  }
+
+  input:focus,
+  textarea:focus {
+    outline: none;
+    border-color: #4a9eff;
+  }
+
+  button {
+    background: #4a9eff;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  button:hover {
+    background: #357abd;
+  }
+
+  button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  .status-message {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    border-radius: 4px;
+    text-align: center;
+  }
+
+  .status-message.error {
+    background: #fee2e2;
+    color: #dc2626;
+  }
+
+  .status-message.success {
+    background: #dcfce7;
+    color: #16a34a;
+  }
+
+  .status-message.info {
+    background: #dbeafe;
+    color: #2563eb;
+  }
+</style>
